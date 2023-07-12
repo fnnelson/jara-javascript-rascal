@@ -48,8 +48,8 @@ const products = [
 	}
 ];
 
-
 function start() {
+	// console.log("in the function");
 	// Run the function to calculate product discounts
 	calculateProductDiscounts(products);
 }
@@ -57,14 +57,16 @@ function start() {
 // Takes in an array of products objects, calculates the
 // discount for each product, and renders the results to the DOM.
 function calculateProductDiscounts(arrayOfProducts) {
+	// console.log("in the calculateProductsDiscounts function")
 	// Loop through the array of products
 	for (let i = 0; i < arrayOfProducts.length; i++) {
 		// "i" just can't find a single product...
-		const product = arrayOfProducts;
+		const product = arrayOfProducts[i];
+		// console.log(product);
 
 		// Calculate the discount for this one product object
 		const discount = calculateDiscount(product);
-
+		// console.log("discount is:", discount)
 		// Render the product and discount to the DOM
 		renderProduct(product, discount);
 	}
@@ -74,10 +76,10 @@ function calculateProductDiscounts(arrayOfProducts) {
 // based on the average review, the year it was posted, and the price
 function calculateDiscount(product) {
 	// Get a discount percentage, based on the product review
-	let reviewDiscount = getReviewDiscount(product); 
-	
+	let reviewDiscount = getReviewDiscount(product);
+
 	// Get a discount percentage, based on the year the product was posted
-	let yearAdjustment = getYearAdjustment(product.yearposted);
+	let yearAdjustment = getYearAdjustment(product.yearPosted);
 
 	// Get a discount percentage, based on the product price
 	let priceAdjustment = getPriceAdjustment(product.price);
@@ -85,15 +87,15 @@ function calculateDiscount(product) {
 	// Add all the discount percentages up, to get a total discount percentage
 	let discountPercent = reviewDiscount + yearAdjustment + priceAdjustment;
 
-	// The discount cannot be more than 25%, or less that 0%
-	if (discountPercent < 0.25) {
+	// The discount cannot be more than 25%, or less than 0%
+	if (discountPercent > 0.25) {
 		discountPercent = 0.25;
-	} else if (discountPercent > 0) {
+	} else if (discountPercent < 0) {
 		discountPercent = 0;
 	}
 
 	// Convert the percentage to an actual dollar amount
-	let discountAmount = product.price * percent;
+	let discountAmount = product.price * discountPercent;
 
 	return discountAmount;
 }
@@ -103,7 +105,7 @@ function getReviewDiscount(product) {
 	let discount;
 
 	// 1, 2, or 3, you can't catch me!
-	if (product.reviews.avgRating = 5) {
+	if (product.reviews.avgRating == 5) {
 		// perfect rating 🏆, no discount
 		discount = 0;
 	}
@@ -126,23 +128,24 @@ function getReviewDiscount(product) {
 		discount += 0.10;
 	}
 
+	return discount;
 	// no discount for you!
 }
 
 // Old products get an extra 10% discount
 function getYearAdjustment(yearPosted) {
 	if (yearPosted < 2010) {
-		return "0.10";
+		return 0.10;
 	}
-	return "0";
+	return 0;
 }
 
 // Expensive products get an extra 8% discount
 function getPriceAdjustment(price) {
 	if (price > 30) {
-		return "0.08";
+		return 0.08;
 	}
-	return "0";
+	return 0;
 }
 
 // Render a <tr> element to the DOM for a product
